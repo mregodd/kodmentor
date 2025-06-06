@@ -1,6 +1,7 @@
 // frontend/src/components/MentorList.js
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';  // ← Link’i ekleyin
 
 const MentorList = ({ mentors, onMentorDeleted }) => {
   if (!mentors || mentors.length === 0) {
@@ -45,19 +46,37 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
                 </span>
               )}
             </div>
-            <button
-              onClick={() => handleDelete(m._id)}
-              style={{
-                backgroundColor: '#e74c3c',
-                color: '#fff',
-                border: 'none',
-                padding: '0.3rem 0.6rem',
-                cursor: 'pointer',
-                borderRadius: '4px'
-              }}
-            >
-              Delete
-            </button>
+            <div>
+              {/* Edit butonu: /edit/:id rotasına link veriyoruz */}
+              <Link to={`/edit/${m._id}`} style={{ marginRight: '0.5rem', textDecoration: 'none' }}>
+                <button
+                  style={{
+                    backgroundColor: '#2980b9',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '0.3rem 0.6rem',
+                    cursor: 'pointer',
+                    borderRadius: '4px'
+                  }}
+                >
+                  Edit
+                </button>
+              </Link>
+
+              <button
+                onClick={() => handleDelete(m._id)}
+                style={{
+                  backgroundColor: '#e74c3c',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.3rem 0.6rem',
+                  cursor: 'pointer',
+                  borderRadius: '4px'
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
