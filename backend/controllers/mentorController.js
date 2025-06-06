@@ -24,4 +24,18 @@ const createMentor = async (req, res) => {
   }
 };
 
-module.exports = { getMentors, createMentor };
+const deleteMentor = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await Mentor.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Mentor not found' });
+    }
+    res.status(200).json({ message: 'Mentor deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to delete mentor' });
+  }
+};
+
+module.exports = { getMentors, createMentor, deleteMentor };
