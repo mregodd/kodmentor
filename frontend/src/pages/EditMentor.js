@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { mentorSchema } from '../validation/mentorSchema';
@@ -18,35 +18,59 @@ const EditMentor = () => {
     handleSubmit,
     reset,
     setError,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm({
     resolver: yupResolver(mentorSchema),
-    defaultValues: { name: '', expertise: '', linkedin: '' }
+    defaultValues: { name: '', expertise: '', linkedin: '', skills: [] }
   });
+
+  const [skillsList, setSkillsList] = useState([]);
+  const [skillInput, setSkillInput] = useState('');
 
   useEffect(() => {
     setLoading(true);
     axios
       .get(`http://localhost:5000/mentors/${id}`)
-      .then((res) => {
-        reset(res.data);
-        setLoading(false);
+      .then(res => {
+        const data = res.data;
+        reset(data);
+        const existing = Array.isArray(data.skills) ? data.skills : [];
+        setSkillsList(existing);
+        setValue('skills', existing);
       })
       .catch(() => {
         setError('api', { type: 'manual', message: 'Failed to load mentor.' });
         toast.error('Failed to load mentor!');
-        setLoading(false);
-      });
-  }, [id, reset, setError, setLoading]);
+      })
+      .finally(() => setLoading(false));
+  }, [id, reset, setError, setValue, setLoading]);
 
-  const onSubmit = async (data) => {
+  const addSkill = () => {
+    const s = skillInput.trim();
+    if (s && !skillsList.includes(s)) {
+      const next = [...skillsList, s];
+      setSkillsList(next);
+      setValue('skills', next);
+    }
+    setSkillInput('');
+  };
+
+  const removeSkill = idx => {
+    const next = skillsList.filter((_, i) => i !== idx);
+    setSkillsList(next);
+    setValue('skills', next);
+  };
+
+  const onSubmit = async data => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5000/mentors/${id}`, data);
+      const payload = { ...data, skills: skillsList };
+      await axios.put(`http://localhost:5000/mentors/${id}`, payload);
       toast.success('Updated');
-      setTimeout(() => navigate('/'), 1200);
+      navigate('/');
     } catch {
-      toast.error('Update failed');
+      toast.error('Mentor failed to update!');
     } finally {
       setLoading(false);
     }
@@ -77,19 +101,29 @@ const EditMentor = () => {
         {errors.linkedin && <p>{errors.linkedin.message}</p>}
       </div>
 
-      <button 
-        type="submit" 
-        disabled={isSubmitting} 
-        className="button button-primary"
-      >
+      <div className="form-field">
+        <label>Skills:</label>
+        <div className="skills-input">
+          {skillsList.map((s, i) => (
+            <span key={i} className="skill-tag">
+              {s} <button type="button" onClick={() => removeSkill(i)}>×</button>
+            </span>
+          ))}
+          <input
+            type="text"
+            value={skillInput}
+            onChange={e => setSkillInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' ? (e.preventDefault(), addSkill()) : null}
+            placeholder="Type a skill and press Enter"
+          />
+        </div>
+        {errors.skills && <p>{errors.skills.message}</p>}
+      </div>
+
+      <button type="submit" disabled={isSubmitting} className="button button-primary">
         {isSubmitting ? 'Updating…' : 'Update Mentor'}
       </button>
-      <button 
-        type="button" 
-        onClick={() => navigate('/')} 
-        disabled={isSubmitting}
-        className="button button-secondary"
-      >
+      <button type="button" onClick={() => navigate('/')} disabled={isSubmitting} className="button button-secondary">
         Cancel
       </button>
     </form>

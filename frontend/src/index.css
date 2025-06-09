@@ -60,7 +60,7 @@ h2 {
   cursor: pointer;
 }
 .button-primary {
-  background-color: #2980b9;
+  background-color: #347dc7;
   color: #fff;
 }
 .button-primary:disabled {
@@ -68,9 +68,46 @@ h2 {
   cursor: not-allowed;
 }
 .button-secondary {
-  background-color: #95a5a6;
+  background-color: #770808;
   color: #fff;
   margin-left: 0.5rem;
+}
+
+/* Skills */
+.skills-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+.skills-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+.skill-tag {
+  background: #0aa7b3;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+}
+.skill-tag button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  margin-left: 0.3rem;
+  cursor: pointer;
+}
+.skills-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 /* Spinner */

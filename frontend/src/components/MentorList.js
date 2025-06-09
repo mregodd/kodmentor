@@ -1,26 +1,24 @@
+import { useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { toast } from 'react-toastify';
 import { LoadingContext } from '../contexts/LoadingContext';
-
 
 const MentorList = ({ mentors, onMentorDeleted }) => {
   const { setLoading } = useContext(LoadingContext);
+
   if (!mentors || mentors.length === 0) {
     return <p>No mentors found.</p>;
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this mentor?')) {
-      return;
-    }
+  const handleDelete = async id => {
+    if (!window.confirm('Are you sure you want to delete this mentor?')) return;
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.delete(`http://localhost:5000/mentors/${id}`);
       onMentorDeleted(id);
-    } catch (err) {
-      console.error('Error deleting mentor:', err);
-      alert('Could not delete mentor. Please try again.');
+    } catch {
+      toast.error('Could not delete mentor. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -30,7 +28,7 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
     <div>
       <h2>Mentor List</h2>
       <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-        {mentors.map((m) => (
+        {mentors.map(m => (
           <li
             key={m._id}
             style={{
@@ -50,34 +48,21 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
                   {' '}| <a href={m.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 </span>
               )}
+              {m.skills && m.skills.length > 0 && (
+                <div className="skills-list">
+                  {m.skills.map((skill, idx) => (
+                    <span key={idx} className="skill-tag">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
-              <Link to={`/edit/${m._id}`} style={{ marginRight: '0.5rem', textDecoration: 'none' }}>
-                <button
-                  style={{
-                    backgroundColor: '#2980b9',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '0.3rem 0.6rem',
-                    cursor: 'pointer',
-                    borderRadius: '4px'
-                  }}
-                >
-                  Edit
-                </button>
+              <Link to={`/edit/${m._id}`}>
+                <button className="button button-primary">Edit</button>
               </Link>
-
-              <button
-                onClick={() => handleDelete(m._id)}
-                style={{
-                  backgroundColor: '#e74c3c',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '0.3rem 0.6rem',
-                  cursor: 'pointer',
-                  borderRadius: '4px'
-                }}
-              >
+              <button onClick={() => handleDelete(m._id)} className="button button-secondary">
                 Delete
               </button>
             </div>

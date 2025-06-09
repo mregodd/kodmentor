@@ -14,4 +14,8 @@ export const mentorSchema = yup.object({
     .url('Must be a valid URL')
     .optional()
     .nullable(),
+  skills: yup
+    .array()
+    .of(yup.string().min(1, 'Skill cannot be empty'))
+    .min(1, 'At least one skill is required')  
 });
