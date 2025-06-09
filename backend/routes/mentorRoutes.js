@@ -11,12 +11,8 @@ const {
 
 const { mentorRules, validateMentor } = require('../middleware/mentorValidator');
 
-router.get(
-  '/',
-  '/:id',
-  getMentors,
-  getMentorById
-);
+router.get('/', getMentors);
+router.get('/:id', getMentorById);
 
 router.post(
   '/',
