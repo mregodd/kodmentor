@@ -11,7 +11,15 @@ const mentorRules = [
     .isLength({ min: 3 }).withMessage('Expertise must be at least 3 characters.'),
   body('linkedin')
     .optional({ checkFalsy: true })
-    .isURL().withMessage('LinkedIn must be a valid URL.')
+    .isURL().withMessage('LinkedIn must be a valid URL.'),
+  body('skills')
+    .isArray({ min: 1 })
+    .withMessage('At least one skill is required.'),
+  body('skills.*')
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage('Each skill must be a non-empty string.')
 ];
 
 const validateMentor = (req, res, next) => {
