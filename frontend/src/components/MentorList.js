@@ -1,9 +1,11 @@
-// frontend/src/components/MentorList.js
-import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';  // ← Link’i ekleyin
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { LoadingContext } from '../contexts/LoadingContext';
+
 
 const MentorList = ({ mentors, onMentorDeleted }) => {
+  const { setLoading } = useContext(LoadingContext);
   if (!mentors || mentors.length === 0) {
     return <p>No mentors found.</p>;
   }
@@ -13,11 +15,14 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
       return;
     }
     try {
+      setLoading(true);
       await axios.delete(`http://localhost:5000/mentors/${id}`);
       onMentorDeleted(id);
     } catch (err) {
       console.error('Error deleting mentor:', err);
       alert('Could not delete mentor. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +52,6 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
               )}
             </div>
             <div>
-              {/* Edit butonu: /edit/:id rotasına link veriyoruz */}
               <Link to={`/edit/${m._id}`} style={{ marginRight: '0.5rem', textDecoration: 'none' }}>
                 <button
                   style={{

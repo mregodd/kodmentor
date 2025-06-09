@@ -1,14 +1,17 @@
-// frontend/src/pages/EditMentor.js
-import React, { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { mentorSchema } from '../validation/mentorSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 const EditMentor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const {
     register,
@@ -22,20 +25,34 @@ const EditMentor = () => {
   });
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`http://localhost:5000/mentors/${id}`)
-      .then((res) => reset(res.data))
-      .catch(() => setError('api', { type: 'manual', message: 'Failed to load mentor.' }));
-  }, [id, reset, setError]);
+      .then((res) => {
+        reset(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('api', { type: 'manual', message: 'Failed to load mentor.' });
+        toast.error('Failed to load mentor!');
+        setLoading(false);
+      });
+  }, [id, reset, setError, setLoading]);
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       await axios.put(`http://localhost:5000/mentors/${id}`, data);
-      navigate('/');
+      toast.success('Updated');
+      setTimeout(() => navigate('/'), 1200);
     } catch {
-      setError('api', { type: 'manual', message: 'Failed to update mentor.' });
+      toast.error('Update failed');
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-container">

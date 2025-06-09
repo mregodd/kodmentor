@@ -1,9 +1,11 @@
-// frontend/src/components/AddMentor.js
-import React from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { mentorSchema } from '../validation/mentorSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 const AddMentor = ({ onMentorAdded }) => {
   const {
@@ -15,14 +17,19 @@ const AddMentor = ({ onMentorAdded }) => {
     resolver: yupResolver(mentorSchema),
     defaultValues: { name: '', expertise: '', linkedin: '' }
   });
+  
+  const { setLoading } = useContext(LoadingContext);
 
   const onSubmit = async (data) => {
+  setLoading(true);
     try {
       const res = await axios.post('http://localhost:5000/mentors', data);
       onMentorAdded(res.data);
       reset();
     } catch {
-      alert('Failed to add mentor.');
+      toast.error('Failed to add mentor');
+    } finally {
+      setLoading(false);
     }
   };
 
