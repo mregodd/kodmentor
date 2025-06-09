@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const {
   getMentors,
   createMentor,
@@ -8,11 +9,29 @@ const {
   getMentorById,
 } = require('../controllers/mentorController');
 
+const { mentorRules, validateMentor } = require('../middleware/mentorValidator');
 
-router.get('/', getMentors);
-router.get('/:id', getMentorById);
-router.post('/', createMentor);
+router.get(
+  '/',
+  '/:id',
+  getMentors,
+  getMentorById
+);
+
+router.post(
+  '/',
+  mentorRules,
+  validateMentor,
+  createMentor
+);
+
 router.delete('/:id', deleteMentor);
-router.put('/:id', updateMentor);
+
+router.put(
+  '/:id',
+  mentorRules,
+  validateMentor,
+  updateMentor
+);
 
 module.exports = router;
