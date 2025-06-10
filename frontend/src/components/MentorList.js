@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LoadingContext } from '../contexts/LoadingContext';
 
 const MentorList = ({ mentors, onMentorDeleted }) => {
   const { setLoading } = useContext(LoadingContext);
+  const navigate = useNavigate();
 
   if (!mentors || mentors.length === 0) {
     return <p>No mentors found.</p>;
@@ -64,6 +65,16 @@ const MentorList = ({ mentors, onMentorDeleted }) => {
               </Link>
               <button onClick={() => handleDelete(m._id)} className="button button-secondary">
                 Delete
+              </button>
+              <button
+                className="button button-primary"
+                onClick={() => {
+                  const userId = localStorage.getItem('userId');
+                  if (!userId) return navigate('/login');
+                  navigate(`/chat/${m._id}`);
+                }}
+              >
+                Chat
               </button>
             </div>
           </li>
