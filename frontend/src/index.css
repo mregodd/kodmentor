@@ -138,3 +138,66 @@ h2 {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Chatbox */
+.chat-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+.messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.message {
+  margin-bottom: 0.8rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  position: relative;
+  max-width: 70%;
+}
+.message.user {
+  background: #e1ffc7;
+  align-self: flex-end;
+}
+.message.mentor {
+  background: #f0f0f0;
+  align-self: flex-start;
+}
+.timestamp {
+  font-size: 0.7rem;
+  color: #555;
+  position: absolute;
+  bottom: -1.2rem;
+  right: 0.4rem;
+}
+.chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+.chat-input input {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  font-size: 1rem;
+}
+.chat-input input:focus {
+  outline: none;
+}
+.chat-input button {
+  padding: 0 1rem;
+  border: none;
+  background: #2980b9;
+  color: #fff;
+  cursor: pointer;
+}
+.chat-input button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
