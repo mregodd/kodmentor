@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import EditMentor from './pages/EditMentor';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +21,8 @@ function App() {
       <Spinner /> 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/edit/:id" element={<EditMentor />} />
         <Route path="/chat/:mentorId" element={<Chat />} />
       </Routes>
