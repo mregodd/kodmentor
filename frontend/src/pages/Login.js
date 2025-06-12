@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/users', { name, email });
+      const res = await axios.post('http://localhost:5000/users/login', { name, email });
       localStorage.setItem('userId', res.data._id);
       navigate('/');
     } catch (err) {
@@ -30,8 +30,11 @@ const Login = () => {
         <label>Email:</label>
         <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required/>
       </div>
-      <button type="submit" className="button button-primary">Start</button>
-    </form>
+      <button type="submit" className="button button-primary">Login</button>
+      <div style={{ marginTop: '1rem' }}>
+        <Link to="/register" className="button button-secondary">Register</Link>
+        <Link to="/" className="button button-secondary" style={{ marginLeft: '0.5rem' }}>Home</Link>
+      </div>    </form>
   );
 };
 
