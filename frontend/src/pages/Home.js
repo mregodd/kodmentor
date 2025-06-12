@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { LoadingContext } from '../contexts/LoadingContext';
 
 const Home = () => {
-  const [mentors, setMentors] = useState([]);;
+  const [mentors, setMentors] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
 
   const fetchMentors = React.useCallback((page = 1, searchTerm = '') => {

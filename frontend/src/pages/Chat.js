@@ -13,7 +13,6 @@ const Chat = () => {
   const { mentorId } = useParams();
   const userId = localStorage.getItem('userId') || '000000000000000000000000';
   const { loading, setLoading } = useContext(LoadingContext);
-
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
